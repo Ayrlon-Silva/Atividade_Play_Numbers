@@ -1,17 +1,28 @@
+import { join } from "path"
 import {
+
     get_number, print, get_number_min_max, get_positive_number, get_ramdom_num_min_max,
-    get_text, get_number_min, get_specific_numbers } from "../../utils/inputs.js"
+    get_text, get_number_min, get_specific_numbers
+
+        } from "../../utils/inputs.js"
 
 
 import {
+
     adcionar_valor_a_vetor, dividir, multiplicar_por_um_valor, gerar_vetor_vazio,
     mapear_vetor,show_vetor, tamanho, elevar_itens_a_um_valor, reduzir_itens_a_uma_fracao,
     subistituir_negativos_por_numero_aleatorio, remover_valor_do_vetor, remover_item_por_posicao,
-    editar_valor_de_posicao_N, ordem_crescente
-    } from "./vetor_utils.js"
+    editar_valor_de_posicao_N, ordem_crescente, ordem_decrescente, retornar_menor_valor,
+    retornar_index_menor_valor, retornar_maior_valor, retornar_index_maior_valor, somatorio_valores,
+    retornar_valores_positivos, contar_positivos, contar_negativos, retornar_valores_negativos,
+    embaralhar_valores
+
+        } from "./vetor_utils.js"
 
 
-import { readFileSync } from 'fs'
+import { readFileSync, writeFile, writeFileSync } from 'fs'
+
+
 
 export function inicializar_vetor_numerico(vetor_principal){
     const menu_vetor = `
@@ -26,11 +37,6 @@ export function inicializar_vetor_numerico(vetor_principal){
 
     let opcao = get_number(menu_vetor)
 
-    while(opcao !== 1 && opcao !== 2 && opcao !== 3){
-        print(`>> Opcao invalida !! Por favor escolha 1, 2 ou 3. `)
-        opcao = get_number(menu_vetor)
-    }
-    
 
     if(opcao === 1){
         const tamanho_vetor = get_positive_number('Tamanho do vetor ? : ')
@@ -122,25 +128,11 @@ export function mostrar_qtd_de_itens(vetor){
 
 
 export function ver_Menor_e_Maior_valores_e_suas_posições(vetor){
-    let menor_valor = vetor[0]
-    let index_menor = 0
+    let menor_valor = retornar_menor_valor(vetor)
+    let index_menor =  retornar_index_menor_valor(vetor)
 
-    let maior_valor = vetor[0]
-    let index_maior = 0
-
-    for(let i = 0; i < tamanho(vetor); i++){
-
-        if(vetor[i] < menor_valor){
-            menor_valor = vetor[i]
-            index_menor = i
-        }
-
-        if(vetor[i] > maior_valor){
-            maior_valor = vetor[i]
-            index_maior = i
-        }
- 
-    }
+    let maior_valor = retornar_maior_valor(vetor)
+    let index_maior = retornar_index_maior_valor(vetor)
 
     print(`
     \n*******************
@@ -155,12 +147,8 @@ export function ver_Menor_e_Maior_valores_e_suas_posições(vetor){
 }
 
 export function calcular_media_dos_Valores(vetor){
-    let somatorio = 0
+    const somatorio = somatorio_valores(vetor)
     const qtd_elementos = tamanho(vetor)
-
-    for(let valor of vetor){
-        somatorio = somatorio + valor
-    }
 
     const media_valores = somatorio / qtd_elementos
     
@@ -174,11 +162,8 @@ export function calcular_media_dos_Valores(vetor){
 
 
 export function calcular_somatorio_dos_valores(vetor){
-    let somatorio = 0
-
-    for(let valor of vetor){
-        somatorio = somatorio + valor
-    }
+    
+    const somatorio = somatorio_valores(vetor)
 
     print(`\n
     ******************************************
@@ -190,15 +175,8 @@ export function calcular_somatorio_dos_valores(vetor){
 
 
 export function mostrar_valores_positivos_e_quantidade(vetor){
-    let positivos = 0
-    let valores_positivos = gerar_vetor_vazio()
-
-    for(let valor of vetor){
-        if(valor > 0){
-            adcionar_valor_a_vetor(valores_positivos, valor)
-            positivos++
-        }
-    }
+    const positivos = contar_positivos(vetor)
+    const valores_positivos = retornar_valores_positivos(vetor)
 
     print(`\n
     ---------------------
@@ -213,15 +191,8 @@ export function mostrar_valores_positivos_e_quantidade(vetor){
 
 
 export function mostrar_valores_negativos_e_quantidade(vetor){
-    let negativos = 0
-    let valores_negativos = gerar_vetor_vazio()
-
-    for(let valor of vetor){
-        if(valor < 0){
-            adcionar_valor_a_vetor(valores_negativos, valor)
-            negativos++
-        }
-    }
+    const negativos = contar_negativos(vetor)
+    const valores_negativos = retornar_valores_negativos(vetor)
 
     print(`\n
     ---------------------
@@ -270,6 +241,9 @@ export function atualizar_todos_os_valores_por_uma_regra(vetor_principal){
     else if(opcao === 5){
         vetor_principal = ordenar_valores_em_crescente_ou_decrescente(vetor_principal)
     }
+    else if(opcao === 6){
+        vetor_principal = embaralhar_valores(vetor_principal)
+    }
 
     return vetor_principal
 }
@@ -286,6 +260,9 @@ export function ordenar_valores_em_crescente_ou_decrescente(vetor_principal){
 
     if(ordem === 1){
         vetor_principal = ordem_crescente(vetor_principal)
+    }
+    else if(ordem === 2){
+        vetor_principal = ordem_decrescente(vetor_principal)
     }
 
     return vetor_principal
@@ -329,3 +306,13 @@ export function editar_valor_especifico_por_posicao(vetor_principal){
 
     return editar_valor_de_posicao_N(vetor_principal, posicao)
 }
+
+
+export function salvar_valores_em_arquivo(vetor_principal){
+    writeFileSync('Valores_vetor.txt', vetor_principal.join('\n'), "utf-8")
+    print(`\n
+    -------------------------------
+    >> Valores salvos com sucesso !!
+    -------------------------------`)
+}
+

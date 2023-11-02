@@ -1,10 +1,14 @@
-import { get_number, enter_to_continue } from '../../utils/inputs.js'
+import { get_number, enter_to_continue, print } from '../../utils/inputs.js'
+
 import {
+
     inicializar_vetor_numerico , mostrar_valores_vetor, resetar_vetor, mostrar_qtd_de_itens, 
     ver_Menor_e_Maior_valores_e_suas_posições, calcular_media_dos_Valores, calcular_somatorio_dos_valores, 
     mostrar_valores_positivos_e_quantidade, mostrar_valores_negativos_e_quantidade, atualizar_todos_os_valores_por_uma_regra,
-    adcionar_novos_valores, remover_itens_por_valor_exato, remover_por_posição, editar_valor_especifico_por_posicao
-    } from './vetor_funcionalidades.js'
+    adcionar_novos_valores, remover_itens_por_valor_exato, remover_por_posição, editar_valor_especifico_por_posicao,
+    salvar_valores_em_arquivo
+
+        } from './vetor_funcionalidades.js'
 
 import { gerar_vetor_vazio } from './vetor_utils.js'
 
@@ -14,7 +18,7 @@ function main(){
 
     let vetor_principal = gerar_vetor_vazio()
 
-    while(opcao !== 0){
+    while(opcao !== 16){
         if(opcao === 1){
             vetor_principal = inicializar_vetor_numerico(vetor_principal)
         }
@@ -57,10 +61,19 @@ function main(){
         else if(opcao === 14){
             vetor_principal = editar_valor_especifico_por_posicao(vetor_principal)
         }
-
+        else if(opcao === 15){
+            salvar_valores_em_arquivo(vetor_principal)
+        }
         enter_to_continue()
         opcao = get_number(menu)
     }
+
+    print(`\n
+    -------------------------
+    Fim do programa ! byebye <3
+    -------------------------
+    `)
+    salvar_valores_em_arquivo(vetor_principal)
 
 }
 
@@ -95,7 +108,9 @@ const menu = `
 
 ( 14 ) - Editar valor especifico por Posicao.
 
-( 0 ) - Sair.
+( 15 ) - Salvar valores em arquivo.
+
+( 16 ) - Sair (salvar valores automaticamente ao sair).
 
 >>> `
 

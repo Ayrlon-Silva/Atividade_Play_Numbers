@@ -43,18 +43,18 @@ export function retornar_menor_valor(vetor){
 
 
 export function retornar_index_menor_valor(vetor){
-    let menor_valor = vetor[0]
-    let index_menor_valor = 0
-
+    let menor_valor = +Infinity
+    let index_menor 
+    
     for(let i = 0; i < tamanho(vetor); i++){
-        const valor_atual = vetor[i]
 
-        if(valor_atual < menor_valor){
-            index_menor_valor = i
+        if(vetor[i] < menor_valor){
+            menor_valor = vetor[i]
+            index_menor = i
         }
     }
 
-    return index_menor_valor
+    return index_menor
 }
 
 
@@ -73,18 +73,18 @@ export function retornar_maior_valor(vetor){
 }
 
 export function retornar_index_maior_valor(vetor){
-    let maior_valor = vetor[0]
-    let index_maior_valor = 0
-
+    let maior_valor = -Infinity
+    let index_maior 
+    
     for(let i = 0; i < tamanho(vetor); i++){
-        const valor_atual = vetor[i]
 
-        if(valor_atual > maior_valor){
-            index_maior_valor = i
+        if(vetor[i] > maior_valor){
+            maior_valor = vetor[i]
+            index_maior = i
         }
     }
 
-    return index_maior_valor
+    return index_maior
 }
 
 /*export function mapear_vetor(vetor, funcao){
@@ -230,21 +230,22 @@ export function editar_valor_de_posicao_N(vetor, posicao){
 
 
 export function ordem_crescente(vetor){
-    if (tamanho(vetor) < 2) {
+    if(tamanho(vetor) < 2){
         return vetor
     }
-    else {
+    else{
         const pivo = vetor [0]
-        const menores = []
-        const maiores = []
+        const menores = gerar_vetor_vazio()
+        const maiores = gerar_vetor_vazio()
     
-            for (let i = 1; i < tamanho(vetor); i++) {
+            for(let i = 1; i < tamanho(vetor); i++){
                 const valor = vetor[i]
 
-                if (valor <= pivo) {
-                menores[tamanho(menores)] = valor
-                } else {
-                maiores[tamanho(maiores)] = valor
+                if(valor <= pivo){
+                adcionar_valor_a_vetor(menores, valor)
+                }
+                else{
+                adcionar_valor_a_vetor(maiores, valor)
                 }
             }
   
@@ -252,18 +253,114 @@ export function ordem_crescente(vetor){
     }
 }
 
-export function adcionar_valor_em_posicao_N(vetor, posicao, valor_desejado){
-    const novo_vetor = gerar_vetor_vazio()
+export function ordem_decrescente(vetor){
+    if(tamanho(vetor) < 2){
+        return vetor
+    }
+    else{
+        const pivo = vetor[0]
+        const menores = gerar_vetor_vazio()
+        const maiores = gerar_vetor_vazio()
 
-    for(let i = 0; i <= tamanho(vetor); i++){
-        const valor = vetor[i]
-        if(i === posicao){
-            adcionar_valor_a_vetor(novo_vetor, valor_desejado)
-            continue
+        for(let i = 1; i < tamanho(vetor); i++){
+            const valor = vetor[i]
+
+            if(valor <= pivo){
+                adcionar_valor_a_vetor(menores, valor)
+            }
+            else{
+                adcionar_valor_a_vetor(maiores, valor)
+            }
         }
 
-        adcionar_valor_a_vetor(novo_vetor, valor)
+        return ordem_decrescente(maiores).concat(pivo, ordem_decrescente(menores))
+    }
+}
+
+export function somatorio_valores(vetor){
+    let somatorio = 0
+
+    for(let valor of vetor){
+        somatorio = somatorio + valor
     }
 
-    return novo_vetor
+    return somatorio
 }
+
+
+export function retornar_valores_positivos(vetor){
+    let valores_positivos = gerar_vetor_vazio()
+
+    for(let valor of vetor){
+        if(valor > 0){
+            adcionar_valor_a_vetor(valores_positivos, valor)
+        }
+    }
+
+    return valores_positivos
+}
+
+
+export function contar_positivos(vetor){
+    let positivos = 0
+
+    for(let valor of vetor){
+        if(valor > 0){
+            positivos++
+        }
+    }
+
+    return positivos
+}
+
+
+
+export function retornar_valores_negativos(vetor){
+    let valores_negativos = gerar_vetor_vazio()
+
+    for(let valor of vetor){
+        if(valor < 0){
+            adcionar_valor_a_vetor(valores_negativos, valor)
+        }
+    }
+
+    return valores_negativos
+}
+
+
+export function contar_negativos(vetor){
+    let negativos = 0
+
+    for(let valor of vetor){
+        if(valor < 0){
+            negativos++
+        }
+    }
+
+    return negativos
+}
+
+
+export function embaralhar_valores(vetor){
+    const vetor_embaralhado = gerar_vetor_vazio()
+
+    while(tamanho(vetor) > 0){
+        let index_aleatorio = get_ramdom_num_min_max(0, tamanho(vetor) - 1)
+        let valor = vetor.splice(index_aleatorio, 1)
+        valor = valor[0]
+
+        adcionar_valor_a_vetor(vetor_embaralhado, valor)
+    }
+
+    return vetor_embaralhado
+}
+
+
+
+export function retornar_valor_aleatorio_do_vetor(vetor){
+
+    const index_aleatorio = get_ramdom_num_min_max(0, tamanho(vetor) - 1)
+
+    return vetor[index_aleatorio]
+}
+
